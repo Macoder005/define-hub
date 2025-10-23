@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="monetag" content="6a8f27cc64e8765dbc1790a827a1c595">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CurvyVibes YouTube Feed</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(to bottom right, #e0f7fa, #f3e5f5);
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #333;
+    }
+
+    header {
+      background: linear-gradient(to right, #4db6ac, #9575cd);
+      color: white;
+      padding: 2rem 1rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+
+    .support-message {
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      color: #fffde7;
+    }
+
+    #feed {
+      padding: 2rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .video-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      padding: 1rem;
+      width: 100%;
+      max-width: 420px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+      animation: fadeIn 0.8s forwards;
+      position: relative;
+    }
+
+    .video-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    }
+
+    iframe {
+      width: 100%;
+      height: 225px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .mute-toggle {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: #4db6ac;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .ad-banner {
+      background: #e1f5fe;
+      border: 2px dashed #4db6ac;
+      padding: 1rem;
+      margin: 2rem auto;
+      max-width: 420px;
+      border-radius: 12px;
+      font-style: italic;
+      color: #00796b;
+      animation: fadeIn 0.8s forwards;
+    }
+
+    .side-ad {
+      position: fixed;
+      top: 100px;
+      width: 120px;
+      height: 600px;
+      background: #e1f5fe;
+      border: 2px dashed #4db6ac;
+      font-style: italic;
+      color: #00796b;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 999;
+    }
+
+    #left-ad {
+      left: 10px;
+    }
+
+    #right-ad {
+      right: 10px;
+    }
+
+    #video-form {
+      margin: 2rem auto;
+      max-width: 420px;
+      padding: 1rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    #video-form input {
+      width: 80%;
+      padding: 0.5rem;
+      margin-right: 0.5rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    #video-form button {
+      padding: 0.5rem 1rem;
+      background: #9575cd;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CurvyVibes YouTube Feed 💃🕺</h1>
+    <div class="support-message">🌍 Support a starving Zimbabwe by just watching 🙏🇿🇼</div>
+  </header>
+
+  <div id="left-ad" class="side-ad">📰 Left Ad</div>
+  <div id="right-ad" class="side-ad">🛍️ Right Ad</div>
+
+  <div id="video-form">
+    <input type="text" id="customVideoId" placeholder="Enter YouTube Video ID" />
+    <button onclick="addCustomVideo()">Add Video</button>
+  </div>
+
+  <div id="feed"></div>
+
+  <script>
+    const videoIds = [
+      "tXbMobHl01o", "2Kw6oshpzII", "iZKm_MYyR6M", "84ye9_SkEmI", "Eq0klrTp9bI",
+      "hh8_HYbZmJc", "kMyD9kG2OyI", "Eixhh24OCgw", "ZUxWvjn2H4A", "hrkhZedMcKw"
+    ];
+
+    let index = 0;
+
+    function createVideoCard(videoId, isFirst = false) {
+      const card = document.createElement('div');
+      card.className = 'video-card';
+
+      const iframe = document.createElement('iframe');
+      const muteParam = isFirst ? "0" : "1";
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=${muteParam}&enablejsapi=1&rel=0&controls=0`;
+      iframe.allow = "autoplay";
+      iframe.allowFullscreen = true;
+      iframe.id = `yt-${index}`;
+
+      const toggleBtn = document.createElement('button');
+      toggleBtn.className = 'mute-toggle';
+      toggleBtn.textContent = isFirst ? "Mute 🔇" : "Unmute 🔊";
+      toggleBtn.onclick = () => {
+        const iframeWindow = iframe.contentWindow;
+        iframeWindow.postMessage(JSON.stringify({
+          event: "command",
+          func: toggleBtn.textContent.includes("Mute") ? "mute" : "unMute",
+          args: []
+        }), "*");
+        toggleBtn.textContent = toggleBtn.textContent.includes("Mute") ? "Unmute 🔊" : "Mute 🔇";
+      };
+
+      card.appendChild(iframe);
+      card.appendChild(toggleBtn);
+      document.getElementById('feed').appendChild(card);
+    }
+
+    function loadNextVideo() {
+      if (index >= videoIds.length) return;
+
+      createVideoCard(videoIds[index], index === 0);
+
+      if ((index + 1) % 2 === 0) {
+        const ad = document.createElement('div');
+        ad.className = 'ad-banner';
+        ad.textContent = '🎯 [Your Ad Banner Here]';
+        document.getElementById('feed').appendChild(ad);
+      }
+
+      index++;
+    }
+
+    function setupScroll() {
+      window.addEventListener('scroll', () => {
+        if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+          loadNextVideo();
+        }
+      });
+    }
+
+    function addCustomVideo() {
+      const input = document.getElementById('customVideoId');
+      const newId = input.value.trim();
+      if (newId) {
+        createVideoCard(newId, false);
+        input.value = "";
+      }
+    }
+
+    for (let i = 0; i < 3; i++) loadNextVideo();
+    setupScroll();
+  </script>
+
+  <!-- AD_TAG: JS_POPUNDER -->
+  <script
